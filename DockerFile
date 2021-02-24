@@ -1,0 +1,12 @@
+FROM golang:latest
+RUN mkdir /app
+ADD . /app/
+WORKDIR /app
+ENV GO111MODULE=auto
+RUN go get github.com/gorilla/mux
+RUN go get github.com/dgrijalva/jwt-go
+RUN go build -o main main.go
+
+CMD ["/app/main"]
+
+EXPOSE 8080

@@ -1,0 +1,20 @@
+version : "3.0"
+
+services:
+
+  aut_server:
+    container_name: auth_server
+    image: go-auth-server:latest
+    ports:
+    - 8080:8080
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 42421:27017
+
+volumes:
+  mongo_data:
