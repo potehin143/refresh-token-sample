@@ -1,30 +1,29 @@
 package main
 
 import (
+	"./app"
 	"./controller"
+	"./helper"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
 	fmt.Println("It Works")
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" //localhost
-	}
-
-	fmt.Println(port)
+	port := app.GetParameters().ServerPort()
 
 	router := mux.NewRouter()
+	router.Use(helper.JwtAuthentication)
+	router.HandleFunc("/api/user/register",
+		controller.Register).Methods("POST")
 	router.HandleFunc("/api/user/login",
-		controller.Authenticate).Methods("POST")
+		controller.Login).Methods("POST")
 	router.HandleFunc("/api/user/refresh",
 		controller.Refresh).Methods("POST")
-	router.HandleFunc("/api/user/{id}",
-		controller.GetUser).Methods("GET")
+	router.HandleFunc("/api/user/logout",
+		controller.Logout).Methods("POST")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

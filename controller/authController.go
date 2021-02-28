@@ -1,43 +1,77 @@
 package controller
 
 import (
-	"../models"
-	"../utils"
+	"../helper"
 	"encoding/json"
 	"fmt"
-	"log"
+	guid "github.com/google/uuid"
 	"net/http"
 )
 
-var Authenticate = func(writer http.ResponseWriter, r *http.Request) {
+//97451926-d9ad-43a1-89f7-dfdd7435e2f9
+var Login = func(writer http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Login called")
 
-	credentials := &models.LoginCredentials{}
+	credentials := &helper.LoginCredentials{}
 	err := json.NewDecoder(r.Body).Decode(credentials) //декодирует тело запроса в struct и завершается неудачно в случае ошибки
 	if err != nil {
-		utils.Respond(writer, utils.Message(utils.WrongParameter))
 		writer.WriteHeader(http.StatusBadRequest)
+		helper.Respond(writer, helper.Message(helper.WrongParameter))
+
+		return
+	}
+	_, err2 := guid.Parse(credentials.Id)
+	if err2 != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		helper.Respond(writer, helper.Message(helper.WrongParameter))
 		return
 	}
 
-	resp, err := models.Login(credentials.Id, credentials.Password)
-	if err != nil {
-		log.Print(err)
-		writer.WriteHeader(http.StatusUnprocessableEntity)
-	}
-	utils.Respond(writer, resp)
+	resp, _ := helper.Login(credentials.Id, credentials.Password, writer)
+
+	helper.Respond(writer, resp)
 }
 
 var Refresh = func(writer http.ResponseWriter, r *http.Request) {
 	fmt.Println("Refresh called")
-	refreshData := &models.RefreshData{}
+	refreshData := &helper.RefreshData{}
 	err := json.NewDecoder(r.Body).Decode(refreshData) //декодирует тело запроса в struct и завершается неудачно в случае ошибки
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
-		utils.Respond(writer, utils.Message(utils.WrongParameter))
+		helper.Respond(writer, helper.Message(helper.WrongParameter))
 		return
 	}
-	resp := models.Refresh(refreshData.Id, refreshData.RefreshToken)
-	utils.Respond(writer, resp)
+	resp, _ := helper.Refresh(refreshData.Id, refreshData.RefreshToken, writer)
+	helper.Respond(writer, resp)
+}
+
+var Logout = func(writer http.ResponseWriter, request *http.Request) {
+	fmt.Println("Logout called")
+	resp, _ := helper.Logout(writer, request)
+	helper.Respond(writer, resp)
+}
+
+var Register = func(writer http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("Register called")
+
+	credentials := &helper.LoginCredentials{}
+	err := json.NewDecoder(r.Body).Decode(credentials) //декодирует тело запроса в struct и завершается неудачно в случае ошибки
+	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		helper.Respond(writer, helper.Message(helper.WrongParameter))
+
+		return
+	}
+	_, err2 := guid.Parse(credentials.Id)
+	if err2 != nil {
+		writer.WriteHeader(http.StatusBadRequest)
+		helper.Respond(writer, helper.Message(helper.WrongParameter))
+		return
+	}
+
+	resp, _ := helper.Register(credentials.Id, credentials.Password, writer)
+
+	helper.Respond(writer, resp)
 }
