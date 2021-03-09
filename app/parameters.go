@@ -140,25 +140,25 @@ func GetParameters() Parameters {
 		}
 
 		accessTokenExpirationMinutes, err := strconv.ParseInt(
-			os.Getenv("ACCESS_TOKEN_EXPIRATION_MINUTES"),
+			os.Getenv("ACCESS_TOKEN_EXPIRATION_MS"),
 			10,
 			64)
 		if err == nil {
 			instance.accessTokenExpiration = accessTokenExpirationMinutes * 1e6
 		} else {
-			log.Print("env variable ACCESS_TOKEN_EXPIRATION_MINUTES is invalid or not set. Using default value ",
+			log.Print("env variable ACCESS_TOKEN_EXPIRATION_MS is invalid or not set. Using default value ",
 				AccessTokenExpirationDefault)
 			instance.accessTokenExpiration = AccessTokenExpirationDefault * 1e6
 		}
 
 		refreshTokenExpiration, err := strconv.ParseInt(
-			os.Getenv("REFRESH_TOKEN_EXPIRATION_MINUTES"),
+			os.Getenv("REFRESH_TOKEN_EXPIRATION_MS"),
 			10,
 			64)
 		if err == nil {
 			instance.refreshTokenExpiration = refreshTokenExpiration * 1e6
 		} else {
-			log.Print("env variable REFRESH_TOKEN_EXPIRATION_MINUTES is invalid or not set. Using default value ",
+			log.Print("env variable REFRESH_TOKEN_EXPIRATION_MS is invalid or not set. Using default value ",
 				RefreshTokenExpirationDefault)
 			instance.refreshTokenExpiration = RefreshTokenExpirationDefault * 1e6
 		}

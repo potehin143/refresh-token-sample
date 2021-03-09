@@ -122,51 +122,6 @@ func Logout(writer http.ResponseWriter, request *http.Request) (map[string]inter
 
 func Refresh(userId string, refreshToken string, writer http.ResponseWriter) (map[string]interface{}, error) {
 
-	/*
-		tokenClaims := jwt.MapClaims{}
-
-		token, err := jwt.ParseWithClaims(refreshToken, &tokenClaims, func(token *jwt.Token) (interface{}, error) {
-			return []byte(app.GetParameters().TokenSecret()), nil
-		})
-
-		if err != nil{
-			writer.WriteHeader(http.StatusUnauthorized)
-			resp := Message(Unauthorized)
-			return resp, err
-		}
-
-		if !token.Valid{
-			resp := Message(Unauthorized)
-			writer.WriteHeader(http.StatusUnauthorized)
-			return resp, errors.New("token is invalid")
-		}
-		expiresAt, ok := tokenClaims["expiresAt"].(float64) // It was parsed to tokenClaims as float64
-		if !ok {
-			resp := Message(Unauthorized)
-			writer.WriteHeader(http.StatusUnauthorized)
-			return resp, errors.New("can't parse expiresAt")
-		}
-		if int64(expiresAt) < time.Now().UnixNano(){ //Token is expired
-			resp := Message(Unauthorized)
-			writer.WriteHeader(http.StatusUnauthorized)
-			return resp, errors.New("token is expired")
-		}
-
-		tokenUserId, ok := tokenClaims["userId"].(string)
-		if !ok {
-			resp := Message(Unauthorized)
-			writer.WriteHeader(http.StatusUnauthorized)
-			return resp, errors.New("can't parse userId")
-		}
-		tokenIdHex, ok := tokenClaims["id"].(string)
-		if !ok {
-			log.Println("cant parse userId")
-			resp := Message(Unauthorized)
-			writer.WriteHeader(http.StatusUnauthorized)
-			return resp, nil
-		}
-
-	*/
 	tokenUserId, tokenIdHex, err := retrieveRefreshToken(refreshToken)
 
 	if err != nil {

@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-//97451926-d9ad-43a1-89f7-dfdd7435e2f9
 var Login = func(writer http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Login called")
