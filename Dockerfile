@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:latest as builder
 
 ENV GO111MODULE=auto
 RUN go get github.com/gorilla/mux
@@ -11,8 +11,13 @@ RUN mkdir /app
 ADD . /app/
 WORKDIR /app
 
-RUN go build -o main main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o main main.go
 
+#Second stage
+
+FROM alpine:latest
+WORKDIR /app
+COPY --from=builder /app/* .
 CMD ["/app/main"]
 
 EXPOSE 8080
